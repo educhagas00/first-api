@@ -1,17 +1,20 @@
 // importando o módulo http
 const http = require('http'); 
-const url = require('url');
+
+// const url = require('url'); deprecated (não recomendado/obsoleto)
+const { URL } = require('url');
 
 const routes = require('./routes');
-const { parse } = require('path');
 
 // Cria o server
 const server = http.createServer((request, response) => {
 
-  const parsedUrl = url.parse(request.url, true);
+  const parsedUrl = new URL(`http://localhost:3000${request.url}`); 
 
   // exibe as informações da request recebida pelo servidor
   console.log(`Request method: ${request.method} | Endpoint: ${parsedUrl.pathname}`);
+
+  const searchParams = Object.fromEntries(parsedUrl.searchParams); // transforma o objeto URLSearchParams em um objeto comum js para facilitar a manipulação dos parametros passados na url
 
   // verifica se a rota requisitada existe no array de rotas
   const route = routes.find((routeObj) => (
@@ -19,7 +22,7 @@ const server = http.createServer((request, response) => {
   ));
 
   if(route) {
-    request.query = parsedUrl.query;
+    request.query = searchParams;
     route.handler(request, response); // se a rota for encontrada, juntamente de seu método correto, executa o handler definido em UserController.js
   }
   else {
