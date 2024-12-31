@@ -1,25 +1,30 @@
 // importando o módulo http
 const http = require('http'); 
+const url = require('url');
 
 const routes = require('./routes');
+const { parse } = require('path');
 
 // Cria o server
 const server = http.createServer((request, response) => {
 
+  const parsedUrl = url.parse(request.url, true);
+
   // exibe as informações da request recebida pelo servidor
-  console.log(`Request method: ${request.method} | Endpoint: ${request.url}`);
+  console.log(`Request method: ${request.method} | Endpoint: ${parsedUrl.pathname}`);
 
   // verifica se a rota requisitada existe no array de rotas
   const route = routes.find((routeObj) => (
-    routeObj.endpoint === request.url && routeObj.method === request.method
+    routeObj.endpoint === parsedUrl.pathname && routeObj.method === request.method
   ));
 
   if(route) {
+    request.query = parsedUrl.query;
     route.handler(request, response); // se a rota for encontrada, juntamente de seu método correto, executa o handler definido em UserController.js
   }
   else {
     response.writeHead(404, { 'Content-Type': 'text/html'}); 
-    response.end(`Cannot ${request.method} ${request.url}`); // padrão de resposta do express 
+    response.end(`Cannot ${request.method} ${parsedUrl.pathname}`); // padrão de resposta do express 
   }
   
 });
