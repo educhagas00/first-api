@@ -1,21 +1,23 @@
 // importando o módulo http
 const http = require('http'); 
 
-const users = require('./mocks/users'); 
+const routes = require('./routes');
 
 // Cria o server
 const server = http.createServer((request, response) => {
 
-
   // exibe as informações da request recebida pelo servidor
   console.log(`Request method: ${request.method} | Endpoint: ${request.url}`);
 
-  if(request.url === '/users' && request.method === 'GET') {
+  // verifica se a rota requisitada existe no array de rotas
+  const route = routes.find((routeObj) => (
+    routeObj.endpoint === request.url && routeObj.method === request.method
+  ));
 
-    response.writeHead(200, { 'Content-Type': 'application/json'}); // status code, objeto contém os headers que eu quero passar na resposta
-    response.end(JSON.stringify(users)); // resposta que será enviada ao cliente
-
-  } else {
+  if(route) {
+    route.handler(request, response); // se a rota for encontrada, juntamente de seu método correto, executa o handler definido em UserController.js
+  }
+  else {
     response.writeHead(404, { 'Content-Type': 'text/html'}); 
     response.end(`Cannot ${request.method} ${request.url}`); // padrão de resposta do express 
   }
