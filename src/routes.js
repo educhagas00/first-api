@@ -13,5 +13,10 @@ module.exports = [ // array em que cada objeto representa uma rota
     method: 'GET',
     handler: UserController.getUserById,
   },
+  {
+    endpoint: '/users',
+    method: 'POST',
+    handler: UserController.createUser,
+  },
 ];
 
