@@ -38,6 +38,12 @@ const server = http.createServer((request, response) => {
     request.query = searchParams;
     request.params = { id }; // injeta o id na request
 
+
+    response.send = (statusCode, body) => {
+      response.writeHead(statusCode, { 'Content-Type': 'application/json'}); 
+      response.end(JSON.stringify({ body }));
+    };
+
     route.handler(request, response); // se a rota for encontrada, juntamente de seu método correto, executa o handler definido em UserController.js
   }
   else {
