@@ -4,6 +4,8 @@ const http = require('http');
 // const url = require('url'); deprecated (não recomendado/obsoleto)
 const { URL } = require('url');
 
+const bodyParser = require('./helpers/bodyParser');
+
 const routes = require('./routes');
 
 // Cria o server
@@ -44,7 +46,12 @@ const server = http.createServer((request, response) => {
       response.end(JSON.stringify({ body }));
     };
 
-    route.handler(request, response); // se a rota for encontrada, juntamente de seu método correto, executa o handler definido em UserController.js
+    if(['POST', 'PUT'].includes(request.method)) { // verifica se a string ta dentro do array 
+      bodyParser(request, () => route.handler(request, response) );
+    }
+    else {
+      route.handler(request, response); // se a rota for encontrada, juntamente de seu método correto, executa o handler definido em UserController.js
+    }
   }
   else {
     response.writeHead(404, { 'Content-Type': 'text/html'}); 
