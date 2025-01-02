@@ -18,5 +18,15 @@ module.exports = [ // array em que cada objeto representa uma rota
     method: 'POST',
     handler: UserController.createUser,
   },
+  {
+    endpoint: '/users/:id',
+    method: 'PUT',
+    handler: UserController.updateUser,
+  },
+  {
+    endpoint: '/users/:id',
+    method: 'DELETE',
+    handler: UserController.deleteUser,
+  },
 ];
 
