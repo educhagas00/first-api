@@ -8,5 +8,10 @@ module.exports = [ // array em que cada objeto representa uma rota
     method: 'GET',
     handler: UserController.listUsers, // apenas passando a referencia da função. sem parenteses.
   },
+  {
+    endpoint: '/users/:id',
+    method: 'GET',
+    handler: UserController.getUserById,
+  },
 ];
 

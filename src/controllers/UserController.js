@@ -21,4 +21,15 @@ module.exports = {
     response.writeHead(200, { 'Content-Type': 'application/json'}); // status code, objeto contém os headers que eu quero passar na resposta
     response.end(JSON.stringify(sortedUsers)); // resposta que será enviada ao cliente (método end só aceita string ou buffer)
   },
+
+  getUserById(request, response) {
+    // método para pegar um usuário pelo id
+
+    const { id } = request.params; // desestruturando o id do request.params
+
+    const user = users.find((user) => user.id === Number(id)); // procura o user com id passado na url. id é uma string, por isso é necessário converter para number (=== compara valor e tipo) 
+
+    response.writeHead(200, { 'Content-Type': 'application/json'}); 
+    response.end(JSON.stringify({ user }));
+  }
 };

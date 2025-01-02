@@ -16,13 +16,28 @@ const server = http.createServer((request, response) => {
 
   const searchParams = Object.fromEntries(parsedUrl.searchParams); // transforma o objeto URLSearchParams em um objeto comum js para facilitar a manipulação dos parametros passados na url
 
+
+  let = { pathname } = parsedUrl;
+  let id = null;
+
+  const splitEndpoint = pathname.split('/').filter(Boolean); // separa a rota em um array de strings, separados pelo '/' e remove os valores vazios
+
+  if(splitEndpoint.length > 1) { 
+    pathname = `/${splitEndpoint[0]}/:id`; // se o array tiver mais de um elemento. a rota será tratada do tipo /user/:id
+    id = splitEndpoint[1]; // o id será o segundo elemento do array
+  }
+
+
   // verifica se a rota requisitada existe no array de rotas
   const route = routes.find((routeObj) => (
-    routeObj.endpoint === parsedUrl.pathname && routeObj.method === request.method
+    routeObj.endpoint === pathname && routeObj.method === request.method
   ));
+
 
   if(route) {
     request.query = searchParams;
+    request.params = { id }; // injeta o id na request
+
     route.handler(request, response); // se a rota for encontrada, juntamente de seu método correto, executa o handler definido em UserController.js
   }
   else {
